@@ -21,6 +21,7 @@ const ChatBot = () => {
     if (!inputMessage.trim()) return;
 
     const userMessage = inputMessage.trim();
+    //////
     setInputMessage('');
     setMessages(prev => [...prev, { text: userMessage, sender: 'user' }]);
     setIsLoading(true);
