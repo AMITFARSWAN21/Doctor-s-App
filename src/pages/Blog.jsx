@@ -9,7 +9,7 @@ const Blog = () => {
     {
       id: 1,
       category: 'health-articles',
-      title: 'Understanding Heart Health: A Comprehensive Guide',
+      title: 'Diet high in fiber, fermented foods could keep inflammatory diseases at bay',
       excerpt: 'Learn about the key factors that contribute to heart health and how to maintain a healthy cardiovascular system.',
       image: assets.blog1,
       date: '2024-03-15',
