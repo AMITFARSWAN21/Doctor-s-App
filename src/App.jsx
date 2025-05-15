@@ -12,6 +12,9 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Blog from './pages/Blog';
 import ChatBot from './components/ChatBot';
+import UserProfile from './pages/UserProfile';
+import AdminDashboard from './pages/AdminDashboard';
+
 
 const App = () => {
   return (
@@ -28,6 +31,10 @@ const App = () => {
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
         <Route path='/blog' element={<Blog />} />
+        <Route path='user-profile' element={<UserProfile/>} />
+        <Route path='admin-dashboard' element={<AdminDashboard/>} />
+        
+        
       </Routes>
       <ChatBot />
       <Footer />

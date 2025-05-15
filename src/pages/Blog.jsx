@@ -3,8 +3,9 @@ import { assets } from '../assets/assets';
 
 const Blog = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const [email, setEmail] = useState('');
 
-  // Sample blog data - In a real app, this would come from an API or database
+  // Sample blog data
   const blogPosts = [
     {
       id: 1,
@@ -14,7 +15,8 @@ const Blog = () => {
       image: assets.blog1,
       date: '2024-03-15',
       author: 'Dr. Sarah Johnson',
-      readTime: '5 min read'
+      readTime: '5 min read',
+      featured: true
     },
     {
       id: 2,
@@ -24,7 +26,8 @@ const Blog = () => {
       image: assets.blog2,
       date: '2024-03-14',
       author: 'Dr. Michael Chen',
-      readTime: '4 min read'
+      readTime: '4 min read',
+      featured: true
     },
     {
       id: 3,
@@ -55,6 +58,16 @@ const Blog = () => {
       date: '2024-03-11',
       author: 'Dr. Lisa Martinez',
       readTime: '4 min read'
+    },
+    {
+      id: 6,
+      category: 'health-articles',
+      title: 'Understanding and Managing Chronic Pain',
+      excerpt: 'Comprehensive approaches to dealing with persistent pain conditions.',
+      image: assets.blog6,
+      date: '2024-03-10',
+      author: 'Dr. Robert Taylor',
+      readTime: '7 min read'
     }
   ];
 
@@ -67,62 +80,118 @@ const Blog = () => {
     { id: 'healthy-lifestyle', name: 'Healthy Lifestyle' }
   ];
 
-  const filteredPosts = activeTab === 'all'
-    ? blogPosts
+  const filteredPosts = activeTab === 'all' 
+    ? blogPosts 
     : blogPosts.filter(post => post.category === activeTab);
 
+  const featuredPosts = blogPosts.filter(post => post.featured);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    // Handle subscription logic here
+    alert(`Thank you for subscribing with ${email}!`);
+    setEmail('');
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Health Blog & Tips</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Stay informed with the latest health news, medical insights, and wellness tips from our expert doctors.
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Health Insights & Wellness Tips</h1>
+          <p className="text-xl max-w-3xl mx-auto opacity-90">
+            Evidence-based medical information and health advice from our team of healthcare professionals
           </p>
         </div>
+      </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => setActiveTab(category.id)}
-              className={`px-6 py-2 rounded-full transition-all duration-300 ${activeTab === category.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-600 hover:bg-gray-100'
-                }`}
-            >
-              {category.name}
-            </button>
-          ))}
-        </div>
-
-        {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map(post => (
-            <div key={post.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-              <img
-                src={post.image}
-                alt={post.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
+      {/* Featured Posts */}
+      <div className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">Featured Articles</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+          {featuredPosts.map(post => (
+            <div key={post.id} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+              <div className="md:w-1/3">
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-6 md:w-2/3">
                 <div className="flex items-center text-sm text-gray-500 mb-2">
                   <span>{post.date}</span>
                   <span className="mx-2">•</span>
                   <span>{post.readTime}</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{post.title}</h3>
+                <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-500">By {post.author}</span>
+                  <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center">
+                    Read More
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 pb-20">
+        {/* Category Tabs */}
+        <div className="mb-12">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {categories.map(category => (
+              <button
+                key={category.id}
+                onClick={() => setActiveTab(category.id)}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  activeTab === category.id
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-gray-100 shadow-sm'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Blog Posts Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredPosts.map(post => (
+            <div key={post.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+              <div className="h-48 overflow-hidden">
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <div className="flex items-center text-xs text-gray-500 mb-3">
+                  <span>{post.date}</span>
+                  <span className="mx-2">•</span>
+                  <span>{post.readTime}</span>
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-3 leading-snug">
                   {post.title}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 text-sm mb-4 flex-grow">
                   {post.excerpt}
                 </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">By {post.author}</span>
-                  <button className="text-blue-600 hover:text-blue-700 font-medium">
-                    Read More →
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                  <span className="text-xs font-medium text-gray-500">By {post.author}</span>
+                  <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                    Read More
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -131,18 +200,49 @@ const Blog = () => {
         </div>
 
         {/* Newsletter Section */}
-        <div className="mt-16 bg-blue-600 rounded-xl p-8 text-center text-white">
-          <h2 className="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-          <p className="mb-6">Get the latest health tips and medical news delivered to your inbox.</p>
-          <div className="max-w-md mx-auto flex gap-4">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-2 rounded-lg text-gray-800"
-            />
-            <button className="bg-white text-blue-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-300">
-              Subscribe
-            </button>
+        <div className="mt-24 bg-white rounded-xl shadow-xl overflow-hidden">
+          <div className="md:flex">
+            <div className="md:w-1/2 bg-blue-600 p-10 text-white flex items-center">
+              <div>
+                <h2 className="text-2xl font-bold mb-3">Stay Updated with Health News</h2>
+                <p className="mb-6 opacity-90">
+                  Subscribe to our newsletter for weekly health tips, medical breakthroughs, and wellness advice.
+                </p>
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>Join 10,000+ subscribers</span>
+                </div>
+              </div>
+            </div>
+            <div className="md:w-1/2 p-10 flex items-center">
+              <form onSubmit={handleSubscribe} className="w-full">
+                <div className="mb-4">
+                  <label htmlFor="email" className="block text-gray-700 text-sm font-medium mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300"
+                >
+                  Subscribe Now
+                </button>
+                <p className="text-xs text-gray-500 mt-3">
+                  We respect your privacy. Unsubscribe at any time.
+                </p>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -150,4 +250,4 @@ const Blog = () => {
   );
 };
 
-export default Blog; 
+export default Blog;

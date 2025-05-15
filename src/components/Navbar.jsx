@@ -120,7 +120,7 @@ const Navbar = () => {
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
               <ul className="flex flex-col">
                 <li className="px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center space-x-2 border-b border-gray-100" 
-                    onClick={() => { setShowDropdown(false); navigate('/profile'); }}>
+                    onClick={() => { setShowDropdown(false); navigate('/user-profile'); }}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>

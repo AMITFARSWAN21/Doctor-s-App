@@ -9,25 +9,24 @@ const Profile = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    role: 'patient', // default role
   });
 
-  const [isLoginMode, setIsLoginMode] = useState(true); // Toggle between Login/Register
+  const [isLoginMode, setIsLoginMode] = useState(true);
 
-  // Redirect to home if already logged in
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (loggedInUser) {
-      navigate('/');
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (user) {
+      if (user.role === 'admin') navigate('/admin-dashboard');
+      else navigate('/');
     }
   }, [navigate]);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle account creation
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -40,19 +39,23 @@ const Profile = () => {
       name: formData.name,
       email: formData.email,
       password: formData.password,
+      role: formData.role, // store role
     };
 
-    // Save to localStorage as registered user
     localStorage.setItem('registeredUser', JSON.stringify(newUser));
-    alert('Account created successfully! You can now log in.');
-    setIsLoginMode(true); // Switch to login
-    setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+    alert('Account created! You can now log in.');
+    setIsLoginMode(true);
+    setFormData({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      role: 'patient',
+    });
   };
 
-  // Handle login
   const handleLogin = (e) => {
     e.preventDefault();
-
     const storedUser = JSON.parse(localStorage.getItem('registeredUser'));
 
     if (
@@ -60,9 +63,14 @@ const Profile = () => {
       storedUser.email === formData.email &&
       storedUser.password === formData.password
     ) {
-      alert(`Welcome back, ${storedUser.name}!`);
-      localStorage.setItem('loggedInUser', JSON.stringify(storedUser)); // Set session
-      navigate('/');
+      localStorage.setItem('loggedInUser', JSON.stringify(storedUser));
+
+      // redirect based on role
+      if (storedUser.role === 'admin') {
+        navigate('/admin-dashboard');
+      } else {
+        navigate('/');
+      }
     } else {
       alert('Invalid email or password!');
     }
@@ -71,51 +79,62 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Header section with decorative top bar */}
         <div className="h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-        
+
         <div className="px-8 py-10">
-          {/* Logo/Icon placeholder */}
           <div className="mx-auto h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          
+
           <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
             {isLoginMode ? 'Welcome Back' : 'Create Account'}
           </h2>
 
           <form onSubmit={isLoginMode ? handleLogin : handleSubmit} className="space-y-6">
             {!isLoginMode && (
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Full Name
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
+              <>
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
+                  <div className="mt-1 relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      name="name"
+                      id="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="John Doe"
+                      required
+                    />
                   </div>
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="John Doe"
-                    required
-                  />
                 </div>
-              </div>
+
+                <div>
+                  <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
+                  <select
+                    name="role"
+                    id="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  >
+                    <option value="patient">Patient</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
-              </label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,7 +147,7 @@ const Profile = () => {
                   id="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="you@example.com"
                   required
                 />
@@ -136,9 +155,7 @@ const Profile = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,7 +168,7 @@ const Profile = () => {
                   id="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="••••••••"
                   required
                 />
@@ -160,26 +177,17 @@ const Profile = () => {
 
             {!isLoginMode && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                  Confirm Password
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="••••••••"
-                    required
-                  />
-                </div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="••••••••"
+                  required
+                />
               </div>
             )}
 
@@ -203,7 +211,7 @@ const Profile = () => {
                 : 'Already have an account? Sign in'}
             </button>
           </div>
-          
+
           {isLoginMode && (
             <div className="mt-4 text-center">
               <a href="#" className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-150">

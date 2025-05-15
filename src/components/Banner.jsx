@@ -6,7 +6,11 @@ const Banner = () => {
   const navigate = useNavigate();
 
   const handleCreateAccount = () => {
-    navigate('/login');
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    // setTimeout(() => {
+    //   navigate('/user-profile');
+    // }, 300);
+    navigate('/user-profile');
   }
 
   return (
