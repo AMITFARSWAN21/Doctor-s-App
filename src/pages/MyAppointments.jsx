@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getAppointments, deleteAppointment } from '../services/db'
+import axios from 'axios'
 import { scrollToTop } from '../utils/scrollUtils'
 
 const MyAppointments = () => {
@@ -8,13 +8,14 @@ const MyAppointments = () => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    scrollToTop();
+    scrollToTop()
     loadAppointments()
   }, [])
 
   const loadAppointments = async () => {
     try {
-      const data = await getAppointments()
+      const response = await axios.get('http://localhost:8080/api/appointments')
+      const data = response.data
       setAppointments(data.sort((a, b) => new Date(b.date) - new Date(a.date)))
     } catch (err) {
       setError('Failed to load appointments')
@@ -32,6 +33,18 @@ const MyAppointments = () => {
       day: 'numeric'
     })
   }
+
+  const deleteAppointment = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/appointments/${id}`)
+      // Remove from state after successful deletion
+      setAppointments((prev) => prev.filter((appt) => appt.id !== id))
+    } catch (error) {
+      console.error('Failed to delete appointment:', error)
+      alert('Failed to delete appointment. Please try again.')
+    }
+  }
+  
 
   if (loading) {
     return (
@@ -64,53 +77,61 @@ const MyAppointments = () => {
                 key={appointment.id}
                 className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
               >
-                <div className="flex flex-col md:flex-row gap-6">
-                  <img
-                    src={appointment.doctorImage}
-                    alt={appointment.doctorName}
-                    className="w-24 h-24 rounded-full border-4 border-gray-100"
-                  />
-                  <div className="flex-1">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div>
-                        <h2 className="text-xl font-semibold text-gray-800">{appointment.doctorName}</h2>
-                        <p className="text-blue-600">{appointment.doctorSpeciality}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${appointment.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : appointment.status === 'completed'
+                {/* Removed image and adjusted layout */}
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-800">{appointment.doctorName}</h2>
+                      <p className="text-blue-600">{appointment.doctorSpeciality}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          appointment.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : appointment.status === 'completed'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-red-100 text-red-700'
-                          }`}>
-                          {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                        </span>
-                      </div>
+                        }`}
+                      >
+                        {appointment.status
+                          ? appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)
+                          : 'Unknown'}
+                      </span>
                     </div>
+                  </div>
 
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-gray-600 text-sm">Appointment Date</p>
-                        <p className="font-medium">{formatDate(appointment.date)}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-600 text-sm">Time</p>
-                        <p className="font-medium">{appointment.time}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-600 text-sm">Patient Name</p>
-                        <p className="font-medium">{appointment.name}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-600 text-sm">Consultation Fee</p>
-                        <p className="font-medium text-blue-600">${appointment.fees}</p>
-                      </div>
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-gray-600 text-sm">Appointment Date</p>
+                      <p className="font-medium">{formatDate(appointment.date)}</p>
                     </div>
+                    <div>
+                      <p className="text-gray-600 text-sm">Time</p>
+                      <p className="font-medium">{appointment.time}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 text-sm">Patient Name</p>
+                      <p className="font-medium">{appointment.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 text-sm">Consultation Fee</p>
+                      <p className="font-medium text-blue-600">${appointment.fees}</p>
+                    </div>
+                  </div>
 
-                    <div className="mt-4">
-                      <p className="text-gray-600 text-sm">Reason for Visit</p>
-                      <p className="mt-1">{appointment.reason}</p>
-                    </div>
+                  <div className="mt-4">
+                    <p className="text-gray-600 text-sm">Reason for Visit</p>
+                    <p className="mt-1">{appointment.reason}</p>
+                  </div>
+
+                  <div className="mt-4 text-right">
+                    <button
+                      onClick={() => deleteAppointment(appointment.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md shadow"
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
               </div>

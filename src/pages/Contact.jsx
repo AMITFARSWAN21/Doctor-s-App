@@ -41,24 +41,42 @@ const Contact = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setSubmitSuccess(true);
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: ''
+  
+      try {
+        const response = await fetch("http://localhost:8080/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
         });
-        setTimeout(() => setSubmitSuccess(false), 5000);
-      }, 1500);
+  
+        if (response.ok) {
+          setSubmitSuccess(true);
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            subject: '',
+            message: ''
+          });
+          setTimeout(() => setSubmitSuccess(false), 5000);
+        } else {
+          console.error("Failed to submit message");
+        }
+  
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+  
+      setIsSubmitting(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50">

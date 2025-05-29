@@ -50,10 +50,10 @@ const Appointment = () => {
     try {
       const appointmentData = {
         ...formData,
-        doctorId: docId,
+        // doctorId: docId,
         doctorName: doctor.name,
-        doctorSpeciality: doctor.speciality,
-        doctorImage: doctor.image,
+        // doctorSpeciality: doctor.speciality,
+        // doctorImage: doctor.image,
         fees: doctor.fees
       }
 

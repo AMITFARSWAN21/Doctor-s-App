@@ -1,168 +1,121 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const PrivacyPolicy = () => {
+const Privacy = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const sections = [
+    {
+      id: 'collect',
+      icon: '👁️',
+      title: 'Information We Collect',
+      content: [
+        'Name, email address, and contact details.',
+        'Login credentials (securely stored and encrypted).',
+        'Usage data such as clicks, visited pages, and interaction time.',
+      ],
+    },
+    {
+      id: 'use',
+      icon: '🧠',
+      title: 'How We Use Your Information',
+      content: [
+        'To provide and improve our services.',
+        'For account verification and security.',
+        'To personalize user experience and send notifications.',
+      ],
+    },
+    {
+      id: 'protection',
+      icon: '🛡️',
+      title: 'Data Protection',
+      content: [
+        'All data is stored in secure, encrypted databases.',
+        'Access control and authentication measures are enforced.',
+        'Regular audits and compliance with data security laws.',
+      ],
+    },
+    {
+      id: 'sharing',
+      icon: '🔒',
+      title: 'Third-Party Sharing',
+      content: [
+        'We do not sell your data.',
+        'We may share data with trusted service providers (e.g., analytics, email services).',
+        'All third parties comply with strict data protection agreements.',
+      ],
+    },
+    {
+      id: 'rights',
+      icon: '✅',
+      title: 'Your Rights',
+      content: [
+        'You can access and update your information anytime.',
+        'Request a copy of your data in portable format.',
+        'Request deletion of your data from our system.',
+      ],
+    },
+    {
+      id: 'changes',
+      icon: '📄',
+      title: 'Changes to Policy',
+      content: [
+        'We may update this policy from time to time.',
+        'You will be notified of significant changes via email or on the site.',
+        'Your continued use means you accept the revised policy.',
+      ],
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header with gradient background */}
-      <header className="bg-gradient-to-r from-green-600 to-green-700 py-16 text-white text-center">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">
-            Your health and privacy are important to us. We are committed to protecting your personal and medical information.
-          </p>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-8 px-4 md:px-16">
+      <div className="max-w-6xl mx-auto">
 
-      {/* Main content container */}
-      <main className="container mx-auto px-4 py-12">
-        {/* White card with shadow */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Last updated notice */}
-          <div className="bg-gray-100 px-6 py-3 border-b">
-            <p className="text-sm text-gray-600">
-              Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-          </div>
+        {/* Navigation */}
+        <nav className="flex flex-wrap justify-center gap-4 mb-10">
+          {sections.map((sec) => (
+            <a
+              key={sec.id}
+              href={`#${sec.id}`}
+              className="text-sm md:text-base text-gray-700 hover:text-blue-600 font-medium transition duration-200"
+            >
+              {sec.title.split(' ')[0]}
+            </a>
+          ))}
+        </nav>
 
-          {/* Policy content */}
-          <div className="p-6 md:p-8 space-y-10">
-            {/* Introduction */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">1. Introduction</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>
-                  Welcome to our Privacy Policy. We understand the importance of maintaining your privacy, especially when it comes to personal and medical information. This Privacy Policy explains how we collect, use, and protect your data when you use our healthcare services.
-                </p>
-                <p>
-                  By using our website and services, you agree to the terms outlined in this policy.
-                </p>
-              </div>
-            </section>
+        {/* Header */}
+        <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-12">Privacy Policy</h1>
 
-            {/* Information Collection */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">2. Information We Collect</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>We collect different types of personal and medical information for various purposes, including improving the quality of our healthcare services:</p>
-                
-                <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">Personal Information</h3>
-                <p>While using our service, we may ask for the following details:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Name, email, and contact information (phone number, address)</li>
-                  <li>Demographic information (age, gender, location)</li>
-                  <li>Emergency contact details</li>
-                  <li>Health-related details (medical history, medications, allergies)</li>
-                  <li>Payment and billing information</li>
-                  <li>Other information you voluntarily provide (e.g., appointment preferences)</li>
-                </ul>
+        {/* Sections */}
+        {sections.map((section) => (
+          <section
+            key={section.id}
+            id={section.id}
+            className="group relative bg-white border border-gray-200 rounded-2xl shadow-lg p-6 md:p-8 mb-10 transition-all duration-300 hover:shadow-2xl hover:border-blue-500"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="text-3xl md:text-4xl">{section.icon}</div>
+              <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 group-hover:text-blue-600">
+                {section.title}
+              </h2>
+            </div>
+            <ul className="list-disc list-inside text-gray-700 space-y-2 pl-1">
+              {section.content.map((point, index) => (
+                <li key={index} className="text-base md:text-lg">{point}</li>
+              ))}
+            </ul>
+          </section>
+        ))}
 
-                <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">Medical Data</h3>
-                <p>We may collect sensitive medical information, such as:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Diagnosis, treatment plans, and procedures</li>
-                  <li>Test results, prescriptions, and treatment histories</li>
-                  <li>Patient notes from consultations</li>
-                </ul>
-
-                <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">Usage Data</h3>
-                <p>We automatically collect information about your usage of our site to improve your experience:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>IP address, browser type, and version</li>
-                  <li>Device information and screen resolution</li>
-                  <li>Pages visited and time spent on the website</li>
-                </ul>
-
-                <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2">Cookies</h3>
-                <p>We use cookies to enhance your experience on our site. You may configure your browser to refuse all cookies or notify you when a cookie is sent.</p>
-              </div>
-            </section>
-
-            {/* How We Use Your Information */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">3. How We Use Your Information</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>We use the collected data for the following purposes:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>To provide medical consultations and healthcare services</li>
-                  <li>To book and manage appointments</li>
-                  <li>To send reminders for upcoming appointments or medical tests</li>
-                  <li>To improve our website and services based on user interaction data</li>
-                  <li>To provide personalized health recommendations</li>
-                  <li>To comply with legal and regulatory healthcare requirements</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Data Security */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">4. Data Security</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>Your data security is paramount to us. We implement robust security measures to protect your personal and medical data from unauthorized access, alteration, or destruction. This includes encryption, secure data storage, and access control protocols.</p>
-                <p>However, please note that no method of transmission over the Internet is 100% secure, and we cannot guarantee complete security of your data.</p>
-              </div>
-            </section>
-
-            {/* Data Sharing */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">5. Data Sharing and Disclosure</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>We may share your information in the following situations:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>
-                    <strong>Healthcare Providers:</strong> With your consent, we may share your medical information with specialists, hospitals, or other healthcare providers for ongoing care.
-                  </li>
-                  <li>
-                    <strong>Legal and Regulatory Requirements:</strong> We may share data when required by law or to comply with a legal process.
-                  </li>
-                  <li>
-                    <strong>Service Providers:</strong> We may share your data with third-party vendors to facilitate services such as appointment booking or payment processing, under strict confidentiality agreements.
-                  </li>
-                </ul>
-                <p>We do not sell your personal or medical data to third parties.</p>
-              </div>
-            </section>
-
-            {/* Your Rights */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">6. Your Data Protection Rights</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>As a patient, you have the following rights regarding your personal and medical information:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>The right to access and obtain a copy of your personal and medical data</li>
-                  <li>The right to update or correct inaccurate data</li>
-                  <li>The right to request deletion of your data in certain circumstances</li>
-                  <li>The right to withdraw consent for data processing</li>
-                  <li>The right to request a restriction on how your data is used</li>
-                </ul>
-                <p>To exercise these rights, please contact us using the details below.</p>
-              </div>
-            </section>
-
-            {/* Policy Changes */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">7. Changes to This Policy</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>We may update this Privacy Policy periodically. Any changes will be posted on this page, and the "Last Updated" date will be revised accordingly. Please review this page regularly for updates.</p>
-              </div>
-            </section>
-
-            {/* Contact Us */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">8. Contact Us</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>If you have any questions about this Privacy Policy or need further clarification, please contact us:</p>
-                <address className="not-italic">
-                  <p>By email: privacy@yourdoctorwebsite.com</p>
-                  <p>By mail: 456 Health Lane, Wellness City, WC 54321</p>
-                  <p>By phone: (987) 654-3210</p>
-                </address>
-              </div>
-            </section>
-          </div>
-        </div>
-      </main>
+        {/* Footer */}
+        <footer className="mt-16 text-center text-gray-500 text-sm">
+          © {new Date().getFullYear()} YourCompany. All rights reserved.
+        </footer>
+      </div>
     </div>
   );
 };
 
-export default PrivacyPolicy;
+export default Privacy;

@@ -63,7 +63,7 @@ const Navbar = () => {
             onClick={() => navigate('/')} 
             src={assets.logo} 
             alt="Logo" 
-            className="h-20 w-20 cursor-pointer" 
+            className="h-30 w-25 cursor-pointer" 
           />
         </div>
 
