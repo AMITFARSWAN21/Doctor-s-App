@@ -9,15 +9,12 @@ const Navbar = () => {
     return JSON.parse(localStorage.getItem('loggedInUser'));
   });
 
-  // Initial setup - runs only once
   useEffect(() => {
-    // Listener for auth changes via custom event
     const handleAuthChange = () => {
       const user = JSON.parse(localStorage.getItem('loggedInUser'));
       setCurrentUser(user);
     };
 
-    // Listener for storage changes (other tabs)
     const handleStorageChange = (e) => {
       if (e.key === 'loggedInUser') {
         const user = e.newValue ? JSON.parse(e.newValue) : null;
@@ -25,7 +22,6 @@ const Navbar = () => {
       }
     };
 
-    // Poll every second in case of same-tab login
     const intervalId = setInterval(() => {
       const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
       setCurrentUser((prevUser) => {
@@ -68,9 +64,9 @@ const Navbar = () => {
         </div>
 
         {/* Nav Links */}
-        <ul className="hidden md:flex space-x-6">
-          {["/", "/doctors", "/blog", "/my-appointments", "/about"].map((path, index) => {
-            const names = ["Home", "Doctors", "Blog", "My Appointments", "About"];
+        <ul className="hidden md:flex space-x-6 items-center">
+          {["/", "/doctors","/my-appointments", "/about"].map((path, index) => {
+            const names = ["Home", "Doctors", "My Appointments", "About"];
             return (
               <NavLink 
                 key={path} 
@@ -83,6 +79,18 @@ const Navbar = () => {
               </NavLink>
             );
           })}
+
+          {/* Reports (visible only when logged in) */}
+          {currentUser && (
+            <NavLink
+              to="/reports"
+              className={({ isActive }) =>
+                `text-gray-600 hover:text-blue-600 transition-colors duration-300 ${isActive ? 'text-blue-600 font-medium' : 'font-medium'}`
+              }
+            >
+              Reports
+            </NavLink>
+          )}
         </ul>
 
         {/* Profile/Login */}
@@ -133,6 +141,15 @@ const Navbar = () => {
                   </svg>
                   <span>My Appointments</span>
                 </li>
+
+                <li className="px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center space-x-2 border-b border-gray-100" 
+                    onClick={() => { setShowDropdown(false); navigate('/reports'); }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a2 2 0 012-2h6a2 2 0 012 2v2m-2 4H9a2 2 0 01-2-2v-2a2 2 0 012-2h10a2 2 0 012 2v2a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Reports</span>
+                </li>
+
                 <li className="px-4 py-3 hover:bg-red-50 cursor-pointer flex items-center space-x-2 text-red-600" 
                     onClick={handleLogout}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

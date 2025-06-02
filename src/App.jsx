@@ -10,11 +10,11 @@ import MyAppointments from './pages/MyAppointments';
 import Appointment from './pages/Appointment';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Blog from './pages/Blog';
 import ChatBot from './components/ChatBot';
 import UserProfile from './pages/UserProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import Privacy from './pages/Privacy';
+import Reports from './pages/Reports';
 
 const App = () => {
   const location = useLocation();
@@ -29,7 +29,8 @@ const App = () => {
   }, [user, location.pathname, navigate]);
 
   // Hide Navbar and Footer on /profile
-  const hideUIPaths = ['/profile'];
+  const hideUIPaths = ['/profile', '/admin-dashboard'];
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -45,10 +46,11 @@ const App = () => {
         <Route path='/profile' element={<Profile />} />
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
-        <Route path='/blog' element={<Blog />} />
+   
         <Route path='/user-profile' element={<UserProfile />} />
         <Route path='/admin-dashboard' element={<AdminDashboard />} />
         <Route path='/privacy' element={<Privacy/>} />
+        <Route path='/reports' element={<Reports/>} />
       </Routes>
 
       <ChatBot />
